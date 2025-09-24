@@ -1,0 +1,315 @@
+﻿@model SistemaFacturacion.Models.Invoice
+@{
+    ViewData["Title"] = "Crear Nueva Invoice";
+}
+
+<!-- Referencia a los estilos de jQuery UI para el autocompletado -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+
+<form asp-action="Create" id="form-factura" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" name="detallesJson" id="detallesJson" />
+
+    <!-- SECCIÓN 1: DATOS GENERALES -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5>1. Datos Generales</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Campo de búsqueda de cliente con botón para agregar nuevo -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label">Buscar Cliente</label>
+                        <div class="input-group">
+                            <input id="cliente-search" class="form-control" placeholder="Buscar por nombre o identificación" />
+                            <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modal-nuevo-cliente">
+                                <i class="fas fa-user-plus"></i> Nuevo
+                            </button>
+                        </div>
+                        <input type="hidden" asp-for="ClienteId" id="cliente-id" />
+                    </div>
+                </div>
+                <!-- Campo de condición de pago -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="CondicionPago" class="control-label"></label>
+                        <select asp-for="CondicionPago" class="form-control">
+                            <option value="Contado">Contado</option>
+                            <option value="Crédito">Crédito</option>
+                            <option value="Transferencia">Transferencia</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Contenedor para mostrar la información del cliente seleccionado -->
+            <div id="cliente-info" class="mt-3 p-3 bg-light rounded" style="display:none;">
+                <h6>Información del Cliente</h6>
+                <p class="mb-1"><strong>Nombre:</strong> <span id="cliente-nombre"></span></p>
+                <p class="mb-1"><strong>Identificación:</strong> <span id="cliente-identificacion"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: DETALLE DE PRODUCTOS -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h5>2. Detalle de Productos/Servicios</h5>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-end">
+                <div class="col-md-5">
+                    <label>Buscar Producto</label>
+                    <input id="producto-search" class="form-control" placeholder="Buscar por nombre o código" />
+                </div>
+            </div>
+            <hr />
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th style="width: 120px;">Cantidad</th>
+                        <th>Precio Unit.</th>
+                        <th>Subtotal</th>
+                        <th style="width: 50px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-detalles"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: TOTALES -->
+    <div class="row justify-content-end">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Subtotal:</strong><span id="factura-subtotal">₡0.00</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Impuesto (13%):</strong><span id="factura-impuesto">₡0.00</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center h4"><strong>TOTAL:</strong><strong id="factura-total">₡0.00</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 4: BOTONES DE ACCIÓN -->
+    <div class="form-group mt-4 text-center">
+        <input type="submit" value="Guardar Factura" class="btn btn-primary btn-lg" />
+        <a asp-action="Index" class="btn btn-secondary btn-lg">Cancelar</a>
+    </div>
+</form>
+
+<!-- Carga la vista parcial del modal para crear un cliente nuevo -->
+<partial name="_CreateCustomerModalPartial" model="new SistemaFacturacion.Models.Customer()" />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            let detalles = [];
+
+            // --- LÓGICA PARA EL MODAL DE NUEVO CLIENTE ---
+            $('#btn-guardar-cliente').on('click', function () {
+                var form = $('#form-nuevo-cliente');
+                if (form.valid()) {
+                    $.ajax({
+                        type: 'POST',
+                        url: form.attr('action'),
+                        data: form.serialize(),
+                        headers: { "X-Requested-With": "XMLHttpRequest" },
+                        success: function (response) {
+                            if (response.success) {
+                                seleccionarCliente(response.cliente);
+                                $('#modal-nuevo-cliente').modal('hide');
+                                form[0].reset();
+                                $('#modal-validation-summary').empty();
+                            } else {
+                                var summary = $('#modal-validation-summary');
+                                summary.empty();
+                                $.each(response.errors, function (key, value) {
+                                    summary.append('<div>' + value.join(', ') + '</div>');
+                                });
+                            }
+                        },
+                        error: function() {
+                            alert("Ocurrió un error al guardar el cliente.");
+                        }
+                    });
+                }
+            });
+
+            // --- FUNCIÓN PARA SELECCIONAR UN CLIENTE ---
+            function seleccionarCliente(cliente) {
+                $("#cliente-id").val(cliente.id);
+                $("#cliente-nombre").text(cliente.nombreCompleto);
+                $("#cliente-identificacion").text(cliente.numeroIdentificacion);
+                $("#cliente-search").val(cliente.nombreCompleto);
+                $("#cliente-info").slideDown();
+            }
+
+            // --- AUTOCOMPLETADO PARA CLIENTES ---
+            $("#cliente-search").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("BuscarClientes", "Invoice")',
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) { response(data); }
+                    });
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    seleccionarCliente({
+                        id: ui.item.id,
+                        nombreCompleto: ui.item.value,
+                        numeroIdentificacion: ui.item.identificacion
+                    });
+                     return false; // Previene que el valor se ponga en el input
+                }
+            });
+
+            // --- CÓDIGO DE PRODUCTOS ---
+
+            // Autocompletado para buscar productos
+            $("#producto-search").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("BuscarProductos", "Invoice")',
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    agregarProducto(ui.item);
+                    $(this).val(''); // Limpia el input de búsqueda
+                    return false; // Previene que el valor se ponga en el input
+                }
+            });
+
+            // Agrega un producto a la tabla de detalles
+            function agregarProducto(producto) {
+                if (detalles.find(d => d.ProductoId === producto.id)) {
+                    alert('El producto ya ha sido agregado.');
+                    return;
+                }
+                const detalle = {
+                    ProductId: producto.id,
+                    Codigo: producto.Codigo, // Usar propiedad directa del JSON
+                    Nombre: producto.value,
+                    Quantity: 1,
+                    PrecioUnitario: producto.precio,
+                    Stock: producto.stock
+                };
+                detalles.push(detalle);
+                renderizarTabla();
+            }
+
+            // Dibuja/actualiza la tabla de detalles
+            function renderizarTabla() {
+                const tablaBody = $("#tabla-detalles");
+                tablaBody.empty();
+                detalles.forEach((detalle, index) => {
+                    const subtotal = (detalle.Quantity * detalle.PrecioUnitario).toFixed(2);
+                    const fila = `
+                        <tr data-id="${detalle.ProductoId}">
+                            <td>${detalle.Codigo}</td>
+                            <td>${detalle.Nombre}</td>
+                            <td><input type="number" class="form-control cantidad-input" value="${detalle.Quantity}" min="1" max="${detalle.Stock}" data-index="${index}"></td>
+                            <td>${detalle.PrecioUnitario.toFixed(2)}</td>
+                            <td>${subtotal}</td>
+                            <td><button type="button" class="btn btn-danger btn-sm eliminar-btn" data-index="${index}">X</button></td>
+                        </tr>`;
+                    tablaBody.append(fila);
+                });
+                calcularTotales();
+            }
+
+            // Maneja el cambio de cantidad
+            $("#tabla-detalles").on("change", ".cantidad-input", function () {
+                const index = $(this).data("index");
+                let nuevaCantidad = parseInt($(this).val());
+
+                if(isNaN(nuevaCantidad) || nuevaCantidad < 1) {
+                    nuevaCantidad = 1;
+                    $(this).val(1);
+                }
+
+                if (nuevaCantidad > detalles[index].Stock) {
+                    alert(`El stock máximo para este producto es ${detalles[index].Stock}.`);
+                    nuevaCantidad = detalles[index].Stock;
+                    $(this).val(nuevaCantidad);
+                }
+
+                detalles[index].Quantity = nuevaCantidad;
+
+                // --- INICIO DE CÓDIGO DE DEPURACIÓN ---
+                console.log("Después de cambiar la cantidad, el objeto es:", detalles[index]);
+                // --- FIN DE CÓDIGO DE DEPURACIÓN ---
+
+                renderizarTabla();
+            });
+
+            // Maneja el botón de eliminar producto
+            $("#tabla-detalles").on("click", ".eliminar-btn", function () {
+                const index = $(this).data("index");
+                detalles.splice(index, 1);
+                renderizarTabla();
+            });
+
+            // Calcula y muestra los totales
+            function calcularTotales() {
+                let subtotal = 0;
+                detalles.forEach(d => {
+                    subtotal += d.Quantity * d.PrecioUnitario;
+                });
+                const impuesto = subtotal * 0.13;
+                const total = subtotal + impuesto;
+                $("#factura-subtotal").text("₡" + subtotal.toFixed(2));
+                $("#factura-impuesto").text("₡" + impuesto.toFixed(2));
+                $("#factura-total").text("₡" + total.toFixed(2));
+            }
+
+            $("#form-factura").submit(function (e) {
+                if ($("#cliente-id").val() === "" || $("#cliente-id").val() === "0") {
+                    alert("Por favor, seleccione un cliente.");
+                    e.preventDefault(); // Detiene el envío del formulario
+                    return;
+                }
+                if (detalles.length === 0) {
+                    alert("Debe agregar al menos un producto a la factura.");
+                    e.preventDefault(); // Detiene el envío del formulario
+                    return;
+                }
+
+                debugger;
+                // Se envían únicamente los datos esenciales (ID y cantidad).
+                // El servidor se encargará de todos los cálculos.
+                const detallesParaEnviar = detalles.map(d => ({
+                    ProductId: d.ProductId,
+                    Quantity: d.Quantity
+                }));
+
+                    // --- INICIO DE CÓDIGO DE DEPURACIÓN ---
+                    console.log("Datos FINALES que se enviarán al servidor:", detallesParaEnviar);
+                    // --- FIN DE CÓDIGO DE DEPURACIÓN ---
+
+                // Se convierte el array de detalles a un string JSON y se asigna al campo oculto.
+                $("#detallesJson").val(JSON.stringify(detallesParaEnviar));
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,100 @@
+﻿@*
+    Este archivo representa la vista principal del módulo de Clientes.
+    - Está fuertemente tipado a una colección de objetos 'Cliente'.
+    - Muestra un encabezado y un botón para agregar nuevos clientes.
+    - Renderiza una tabla con los datos de cada cliente.
+    - Muestra un mensaje si no existen clientes registrados.
+*@
+
+@model IEnumerable<SistemaFacturacion.Models.Customer>
+
+@{
+    ViewData["Title"] = "Modulo de Gestión de Clientes";
+}
+
+<div class="container mt-4">
+
+    @* SECCIÓN 1: Encabezado y Botón de Acción Principal *@
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h1>@ViewData["Title"]</h1>
+            <p class="text-muted">Administre la información de sus clientes.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            @* Este botón debería llevar a una vista para crear un nuevo cliente.
+                Puedes usar el modal que ya tienes o crear una página nueva. *@
+            <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm">
+                <i class="fas fa-plus-circle me-2"></i> Registrar Nuevo Cliente
+            </a>
+        </div>
+    </div>
+
+    @* SECCIÓN 2: Mensaje de Notificación (Feedback para el usuario) *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <h3 class="mt-5">Historial de Clientes</h3>
+    <hr />
+
+    @* SECCIÓN 3: Recuadro de busqueda para clientes*@
+    <form asp-controller="Customers" asp-action="" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="terminoBusqueda" class="form-control" placeholder="Buscar por ID o Nombre..." value="@ViewData["FiltroActual"]" />
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+
+    @* SECCIÓN 4: Tabla con la Lista de Clientes *@
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().NumeroIdentificacion)</th>
+                            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().NombreCompleto)</th>
+                            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().CorreoElectronico)</th>
+                            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Telefono)</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.NumeroIdentificacion)</td>
+                                <td>@Html.DisplayFor(modelItem => item.NombreCompleto)</td>
+                                <td>@Html.DisplayFor(modelItem => item.CorreoElectronico)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Telefono)</td>
+                                <td class="text-center">
+                                    @* Botones de acción ESTANDARIZADOS con solo iconos *@
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm" title="Editar">
+                                        <i class="fas fa-pencil-alt"></i> Editar
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm text-white" title="Ver Detalle">
+                                        <i class="fas fa-eye"></i> Detalles
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @* ... *@
+                </table>
+            }
+            else
+            {
+                <div class="text-center p-5">
+                    <p class="h5">No hay clientes registrados.</p>
+                    <p>¡Registra el primero haciendo clic en el botón de arriba!</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+@* --- INICIO DE LA CORRECCIÓN SIMPLIFICADA --- *@
+<script type="text/javascript">
+    /**
+     * Sobrescribe el método de validación de NÚMERO de jQuery Validate.
+     * Esta expresión regular simple acepta un número que puede contener
+     * un punto O una coma como separador decimal.
+     */
+    $.validator.methods.number = function (value, element) {
+        return this.optional(element) || /^-?\d+([.,]\d+)?$/.test(value);
+    };
+
+    /**
+     * Sobrescribe el método de validación de RANGO de jQuery Validate.
+     * Reemplaza la coma por un punto para asegurar que JavaScript pueda
+     * realizar la comparación numérica correctamente.
+     */
+    $.validator.methods.range = function (value, element, param) {
+        // Reemplaza la coma por un punto para la comparación.
+        var globalizedValue = value.replace(",", ".");
+        // Realiza la validación de rango.
+        return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+    };
+</script>
+@* --- FIN DE LA CORRECCIÓN --- *@

@@ -1,0 +1,101 @@
+﻿@*
+    Este archivo representa la página principal del módulo de Facturación.
+    - Muestra un encabezado con el título y un botón para crear nuevas facturas.
+    - Presenta un historial de las facturas ya creadas en una tabla.
+    - Muestra un mensaje de éxito (TempData) si se acaba de crear una factura.
+*@
+
+@model IEnumerable<SistemaFacturacion.Models.Invoice>
+
+@{
+    ViewData["Title"] = "Módulo de Facturación";
+}
+
+<div class="container mt-4">
+
+    @* SECCIÓN 1: Encabezado y Botón de Acción Principal *@
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h1>@ViewData["Title"]</h1>
+            <p class="text-muted">Administre el historial y la creación de nuevas facturas.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            @* El Tag Helper 'asp-action="Crear"' genera un enlace a la acción 'Crear' del controlador actual (FacturacionController) *@
+            <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm">
+                <i class="fas fa-plus-circle me-2"></i>Crear Nueva Factura
+            </a>
+
+            <a class="btn btn-secondary btn-lg shadow-sm" asp-controller="CompanyData" asp-action="Index">
+                <i class="fas fa-file-invoice me-2"></i>Datos de Facturación de la Empresa
+            </a>
+        </div>
+    </div>
+
+    @* SECCIÓN 2: Mensaje de Notificación (Feedback para el usuario) *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <h3 class="mt-5">Historial de Facturas</h3>
+    <hr />
+
+    @* SECCIÓN 2: Recuadro para busqueda de facturas *@
+    <form asp-controller="Invoice" asp-action="Index" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="terminoBusqueda" class="form-control" placeholder="Buscar por Número de Factura o Nombre del Cliente" value="@ViewData["FiltroActual"]" />
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+
+    @* SECCIÓN 2: Tabla con el Historial de Facturas *@
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @* Se verifica si el modelo contiene alguna factura para mostrar *@
+            @if (Model != null && Model.Any())
+            {
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().NumeroFactura)</th>
+                            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().FechaEmision)</th>
+                            <th>Cliente</th>
+                            <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Total)</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* Se itera sobre cada factura en el modelo para crear una fila en la tabla *@
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.NumeroFactura)</td>
+                                <td>@item.FechaEmision.ToString("dd/MM/yyyy")</td>
+                                <td>@Html.DisplayFor(modelItem => item.Cliente.NombreCompleto)</td>
+                                <td>@item.Total.ToString("C")</td>
+                                <td class="text-center">
+                                    @* Botón para ver los detalles de una factura específica. El Tag Helper 'asp-route-id' pasa el ID de la factura a la URL. *@
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm text-white" title="Ver Detalle">
+                                        <i class="fas fa-eye"> Detalle</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                @* Mensaje que se muestra si no hay ninguna factura en la base de datos *@
+                <div class="text-center p-5">
+                    <p class="h5">Aún no se han generado facturas.</p>
+                    <p>¡Crea la primera haciendo clic en el botón de arriba!</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

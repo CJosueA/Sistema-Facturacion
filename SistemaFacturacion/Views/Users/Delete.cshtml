@@ -1,0 +1,43 @@
+﻿@model SistemaFacturacion.Models.User
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg mt-4">
+
+            <div class="card-header text-center bg-dark text-white">
+                <h3 class="my-2"><i class="fas fa-exclamation-triangle me-2"></i> Confirmar Eliminación</h3>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="alert alert-danger text-center" role="alert">
+                    <h5 class="alert-heading">¿Está seguro de que desea eliminar a este usuario?</h5>
+                    <p class="mb-0">Esta acción no se puede deshacer.</p>
+                </div>
+
+                <dl class="row mt-4">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NombreUsuario)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreUsuario)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Rol)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Rol)</dd>
+                </dl>
+
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <i class="fas fa-trash-alt me-2"></i> Sí, eliminar usuario
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times-circle me-2"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+﻿@*
+    VIEW FOR DISPLAYING AND MANAGING THE LIST OF PRODUCTS
+    Design: A comprehensive layout featuring a header with a primary action button (Create),
+            a search bar for filtering, and a responsive table within a card.
+    UX: Provides a clear and interactive overview of all products. The search functionality
+        enhances usability, and action buttons on each row offer intuitive operations.
+*@
+
+@model IEnumerable<SistemaFacturacion.Models.Product>
+
+@{
+    ViewData["Title"] = "Módulo de Gestión de Productos";
+}
+
+<div class="container mt-4">
+
+    @* SECTION 1: Header and Action Button *@
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h1>@ViewData["Title"]</h1>
+            <p class="text-muted">Ingrese y Gestione los Productos del Sistema.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm">
+                <i class="fas fa-plus-circle me-2"></i>Ingresar Nuevo Producto
+            </a>
+        </div>
+    </div>
+
+    @* SECTION 2: Notification Message *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <h3 class="mt-5">Historial de Productos</h3>
+    <hr />
+
+    @* SECTION 3: Search Form *@
+    <form asp-controller="Products" asp-action="Index" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="terminoBusqueda" class="form-control" placeholder="Buscar por Código, Nombre o Categoría..." value="@ViewData["FiltroActual"]" />
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+
+    @* SECTION 4: Card-Styled Table with Conditional Logic *@
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Code)</th>
+                            <th>@Html.DisplayNameFor(model => model.Name)</th>
+                            <th>@Html.DisplayNameFor(model => model.Price)</th>
+                            <th>@Html.DisplayNameFor(model => model.Category)</th>
+                            <th>@Html.DisplayNameFor(model => model.Stock)</th>
+                            <th>@Html.DisplayNameFor(model => model.IsActive)</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Code)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@item.Price.ToString("C")</td>
+                                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Stock)</td>
+                                <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
+                                <td class="text-center">
+                                    <div class="d-grid gap-1">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm" title="Editar Producto">
+                                            <i class="fas fa-pencil-alt me-1"></i> Editar
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm text-white" title="Ver Detalle">
+                                            <i class="fas fa-eye me-1"></i> Detalle
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" title="Desactivar Producto">
+                                            <i class="fas fa-trash me-1"></i> Desactivar
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="text-center p-5">
+                    <p class="h5">No se encontraron productos.</p>
+                    <p>Puedes registrar el primero usando el botón "Ingresar Nuevo Producto".</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

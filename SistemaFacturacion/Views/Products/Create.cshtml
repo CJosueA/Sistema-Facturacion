@@ -1,0 +1,74 @@
+﻿@*
+    VIEW FOR CREATING NEW PRODUCTS
+    Design: Centered, card-based layout for a clean focus.
+    UX: Clear input fields with descriptive labels and a well-defined primary action button.
+*@
+
+@model SistemaFacturacion.Models.Product
+
+@{
+    ViewData["Title"] = "Registrar Nuevo Producto";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+        <div class="card shadow-lg mt-4">
+
+            @* SECTION 1: View Header *@
+            <div class="card-header text-center bg-dark text-white">
+                <h3 class="my-2">@ViewData["Title"]</h3>
+            </div>
+
+            @* SECTION 2: Main Form Body *@
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <p class="text-muted">Complete la información para registrar un nuevo producto en el sistema.</p>
+                </div>
+
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    @* SECTION 2.1: Form Input Fields *@
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold"></label>
+                        <input asp-for="Name" class="form-control" placeholder="Ej: Teclado Mecánico RGB" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Price" class="form-label fw-bold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">₡</span>
+                            <input asp-for="Price" class="form-control" placeholder="Ej: 55000,00" />
+                        </div>
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Category" class="form-label fw-bold"></label>
+                        <input asp-for="Category" class="form-control" placeholder="Ej: Periféricos de Entrada" />
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+
+                    @* SECTION 2.2: Form Action Buttons *@
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle me-2"></i> Crear Producto
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times-circle me-2"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* SECTION 3: Validation Scripts *@
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,100 @@
+﻿@*
+    Este archivo representa el Dashboard o la página principal del sistema una vez que el usuario ha iniciado sesión.
+    - Muestra un mensaje de bienvenida.
+    - Contiene una serie de "tarjetas" (cards) que funcionan como accesos directos a los principales módulos de la aplicación.
+*@
+
+@{
+    ViewData["Title"] = "Dashboard del Sistema";
+}
+
+@* SECCIÓN 1: Encabezado de Bienvenida *@
+<div class="text-center">
+    <h1 class="display-4">¡Bienvenido!</h1>
+    <p class="lead">Sistema de Gestión de Inventario y Facturación</p>
+    <hr />
+</div>
+
+@* SECCIÓN 2: Mensaje de Notificación (Feedback para el usuario) *@
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@* SECCIÓN 3: Contenedor de Tarjetas de Acceso Directo *@
+<div class="row mt-5 justify-content-center">
+
+    @* Tarjeta para la Gestión de Productos *@
+    @if (User.IsInRole("Administrador"))
+    {
+        <div class="col-md-3 mb-4">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Gestión de Productos</h5>
+                    <p class="card-text">Crear, editar, buscar y listar los productos del inventario.</p>
+                    @* El Tag Helper 'asp-controller' y 'asp-action' generan un enlace al método Index del ProductosController *@
+                    <a asp-controller="Products" asp-action="Index" class="btn btn-primary mt-auto">Ir a Productos</a>
+                </div>
+            </div>
+        </div>
+    }
+    
+
+    @* Tarjeta para los Movimientos de Inventario *@
+    <div class="col-md-3 mb-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Movimientos de Inventario</h5>
+                <p class="card-text">Registrar entradas y salidas de stock para los productos existentes.</p>
+                <a asp-controller="Movements" asp-action="Index" class="btn btn-success mt-auto">Registrar Movimiento</a>
+            </div>
+        </div>
+    </div>
+
+    @* Tarjeta para Facturación *@
+    <div class="col-md-3 mb-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Facturación</h5>
+                <p class="card-text">Crear nuevas facturas y consultar el historial.</p>
+                <a asp-controller="Invoice" asp-action="Index" class="btn btn-danger mt-auto text-white">Ir a Facturación</a>
+            </div>
+        </div>
+    </div>
+
+    @* --- Tarjeta para la Gestión de Clientes --- *@
+    <div class="col-md-3 mb-4">
+        <div class="card text-center shadow-sm h-100">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Gestión de Clientes</h5>
+                <p class="card-text">Ver, agregar o editar la información de sus clientes.</p>
+
+                @* ESTA ES LA LÍNEA CRÍTICA:
+                'asp-controller' le dice a ASP.NET que busque el 'ClientesController'.
+                'asp-action' le dice que ejecute el método 'Index'.
+                Esto genera la URL correcta (/Clientes/Index) para que el sistema funcione.
+                *@
+                <a asp-controller="Customers" asp-action="Index" class="btn btn-info mt-auto text-white">Administrar Clientes</a>
+
+            </div>
+        </div>
+    </div>
+
+    @* Tarjeta para Gestion de Usuarios *@
+    @if (User.IsInRole("Administrador"))
+    {
+        <div class="col-md-3 mb-4">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Usuarios</h5>
+                    <p class="card-text">Gestione los usuarios del sistema.</p>
+                    @*<a asp-controller="Facturacion" asp-action="Index" class="btn btn-info mt-auto text-white">Ir a Facturación</a>*@
+                    <a asp-area="" asp-controller="Users" asp-action="Index" class="btn btn-warning mt-auto text-black">Gestionar Usuarios</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

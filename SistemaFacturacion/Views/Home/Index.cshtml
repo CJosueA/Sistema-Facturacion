@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+@* SECCIÓN 1: Encabezado Principal (Jumbotron) *@
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Bienvenido al Sistema de Gestión</h1>
+        <p class="col-md-8 fs-4">
+            Una solución integral para administrar el inventario, la facturación y los clientes de tu negocio.
+            Optimiza tus operaciones y mantén el control total desde un solo lugar.
+        </p>
+        <a class="btn btn-primary btn-lg" asp-controller="Auth" asp-action="Login">
+            <i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión para Empezar
+        </a>
+    </div>
+</div>
+
+@* SECCIÓN 2: Características Principales del Sistema *@
+<div class="row align-items-md-stretch text-center">
+    <h2 class="mb-4">Características Principales</h2>
+
+    @* Característica 1: Gestión de Inventario *@
+    <div class="col-md-4 mb-4">
+        <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <i class="fas fa-boxes fa-3x mb-3"></i>
+            <h3>Inventario</h3>
+            <p>Control total sobre tus productos, incluyendo gestión de stock, precios y categorías. Registra entradas y salidas de inventario de forma sencilla.</p>
+        </div>
+    </div>
+
+    @* Característica 2: Facturación *@
+    <div class="col-md-4 mb-4">
+        <div class="h-100 p-5 bg-light border rounded-3">
+            <i class="fas fa-file-invoice-dollar fa-3x mb-3"></i>
+            <h3>Facturación</h3>
+            <p>Genera facturas profesionales en segundos, consulta el historial de ventas y descarga versiones en PDF para tus registros o para enviar a clientes.</p>
+        </div>
+    </div>
+
+    @* Característica 3: Gestión de Clientes *@
+    <div class="col-md-4 mb-4">
+        <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <i class="fas fa-users fa-3x mb-3"></i>
+            <h3>Clientes</h3>
+            <p>Mantén una base de datos centralizada de tus clientes. Registra, consulta y actualiza su información de contacto para agilizar el proceso de facturación.</p>
+        </div>
+    </div>
+</div>

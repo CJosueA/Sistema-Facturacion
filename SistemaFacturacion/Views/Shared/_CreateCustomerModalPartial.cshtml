@@ -1,0 +1,59 @@
+﻿@model SistemaFacturacion.Models.Customer
+
+<div class="modal fade" id="modal-nuevo-cliente" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Registrar Nuevo Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-nuevo-cliente" asp-controller="Customers" asp-action="Create">
+                    @Html.AntiForgeryToken()
+                    <div id="modal-validation-summary" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="NombreCompleto" class="control-label"></label>
+                                <input asp-for="NombreCompleto" class="form-control" />
+                                <span asp-validation-for="NombreCompleto" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="NumeroIdentificacion" class="control-label"></label>
+                                <input asp-for="NumeroIdentificacion" class="form-control" />
+                                <span asp-validation-for="NumeroIdentificacion" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Direccion" class="control-label"></label>
+                        <input asp-for="Direccion" class="form-control" />
+                        <span asp-validation-for="Direccion" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Telefono" class="control-label"></label>
+                                <input asp-for="Telefono" class="form-control" />
+                                <span asp-validation-for="Telefono" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="CorreoElectronico" class="control-label"></label>
+                                <input asp-for="CorreoElectronico" class="form-control" />
+                                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btn-guardar-cliente" class="btn btn-primary">Guardar Cliente</button>
+            </div>
+        </div>
+    </div>
+</div>

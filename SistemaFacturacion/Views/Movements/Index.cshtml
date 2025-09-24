@@ -1,0 +1,91 @@
+﻿@*
+    MAIN VIEW FOR THE INVENTORY MOVEMENTS MODULE
+    Design: A clean and intuitive layout featuring a search bar and a results table.
+    UX: Allows users to easily search for products by multiple criteria (code, name, category).
+    Each product in the results has clear action buttons ("Select" and "History")
+    to guide the user to the next logical step. A success message provides feedback after an action.
+*@
+
+@model IEnumerable<SistemaFacturacion.Models.Product>
+
+@{
+    ViewData["Title"] = "Módulo de Gestión de Movimientos de Inventario";
+}
+
+<div class="container mt-4">
+
+    @* SECTION 1: Header *@
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-12">
+            <h1>@ViewData["Title"]</h1>
+            <p class="text-muted">Busque y seleccione el producto al cual desea registrarle una entrada o salida de inventario.</p>
+        </div>
+    </div>
+
+    @* SECTION 2: Notification Message *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <h3 class="mt-5">Seleccionar Producto</h3>
+    <hr />
+
+    @* SECTION 3: Search Form *@
+    <form asp-action="Index" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="searchString" class="form-control" placeholder="Buscar por Código, Nombre o Categoría..." value="@ViewData["FiltroActual"]" />
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+        </div>
+    </form>
+
+    @* SECTION 4: Card-Style Table and Conditional Logic *@
+    <div class="card shadow-sm">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Stock Actual</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Code)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Stock)</td>
+                                <td class="text-center">
+                                    <a asp-action="Create" asp-route-id="@item.Id" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check-circle me-1"></i> Seleccionar
+                                    </a>
+                                    <a asp-action="History" asp-route-id="@item.Id" class="btn btn-info btn-sm text-white">
+                                        <i class="fas fa-history me-1"></i> Historial
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="text-center p-5">
+                    <p class="h5">No se encontraron productos con los criterios de búsqueda.</p>
+                    <p>Asegúrese de que haya productos registrados en el Módulo de Productos.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

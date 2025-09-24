@@ -1,0 +1,61 @@
+﻿@model SistemaFacturacion.Models.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Inicio de Sesión";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+
+        <div class="card shadow-lg mt-4">
+
+            <div class="card-header text-center bg-dark text-white">
+                <h3 class="my-2">@ViewData["Title"]</h3>
+            </div>
+
+            <div class="card-body p-4">
+
+                @* --- BLOQUE PARA MOSTRAR MENSAJES DE ERROR Y ÉXITO --- *@
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+                }
+                @if (TempData["InfoMessage"] != null)
+                {
+                    <div class="alert alert-info text-center">@TempData["InfoMessage"]</div>
+                }
+                @* --- FIN DEL BLOQUE --- *@
+
+                <section>
+                    <form asp-controller="Auth" asp-action="Login" method="post">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="NombreUsuario" class="form-label fw-bold"></label>
+                            <input asp-for="NombreUsuario" class="form-control" />
+                            <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Contrasena" class="form-label fw-bold"></label>
+                            <input asp-for="Contrasena" class="form-control" type="password" />
+                            <span asp-validation-for="Contrasena" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>

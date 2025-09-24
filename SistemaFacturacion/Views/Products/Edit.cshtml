@@ -1,0 +1,93 @@
+﻿@*
+    VIEW FOR EDITING EXISTING PRODUCTS
+    Design: Centered, card-based layout with a shadow for a clean and professional look.
+    UX: Non-editable fields are clearly marked, controls are modern (e.g., switch),
+        and action buttons are clear to the user.
+*@
+
+@model SistemaFacturacion.Models.Product
+
+@{
+    ViewData["Title"] = "Editar Producto";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+        <div class="card shadow-lg mt-4">
+
+            @* SECTION 1: View Header *@
+            <div class="card-header text-center bg-dark text-white">
+                <h3 class="my-2">@ViewData["Title"]</h3>
+            </div>
+
+            @* SECTION 2: Main Form Body *@
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <p class="text-muted">Modifique los detalles del producto: <strong>@Model.Name</strong></p>
+                </div>
+
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="Id" />
+
+                    @* SECTION 2.1: Form Input Fields *@
+                    <div class="mb-3">
+                        <label asp-for="Code" class="form-label fw-bold"></label>
+                        <input asp-for="Code" class="form-control bg-light" readonly />
+                        <div class="form-text">El código se genera automáticamente y no puede ser modificado.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Price" class="form-label fw-bold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">₡</span>
+                            <input asp-for="Price" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Category" class="form-label fw-bold"></label>
+                        <input asp-for="Category" class="form-control" />
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Stock" class="form-label fw-bold"></label>
+                        <input asp-for="Stock" class="form-control bg-light" readonly />
+                        <div class="form-text">El stock se actualiza automáticamente desde el módulo de inventario.</div>
+                    </div>
+
+                    <div class="form-check form-switch mb-4">
+                        <input class="form-check-input" type="checkbox" role="switch" asp-for="IsActive" />
+                        <label class="form-check-label" asp-for="IsActive">@Html.DisplayNameFor(model => model.IsActive)</label>
+                    </div>
+
+                    @* SECTION 2.2: Form Action Buttons *@
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i> Guardar Cambios
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times-circle me-2"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* SECTION 3: Validation Scripts *@
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

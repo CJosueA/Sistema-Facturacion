@@ -1,0 +1,86 @@
+﻿@*
+    VISTA PARA LA CONFIGURACIÓN DE DATOS DE LA EMPRESA
+    Diseño: Formulario centrado en una tarjeta con sombra para un aspecto profesional.
+    UX: Se utilizan iconos en los campos de entrada para mejorar la claridad y el reconocimiento
+    visual de cada dato solicitado.
+*@
+@model SistemaFacturacion.Models.CompanyData
+
+@{
+    ViewData["Title"] = "Modulo de Configuración de lo datos de Facturación de la Empresa";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+
+        <div class="card shadow-lg mt-4">
+
+            <div class="card-header text-center bg-dark text-white">
+                <h3 class="my-2">
+                    <i class="fas fa-building me-2"></i> @ViewData["Title"]
+                </h3>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <p class="text-muted">Modifique los datos que aparecerán en el encabezado de todas las facturas.</p>
+                </div>
+
+                <form asp-action="Index">
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="row">
+
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="NombreEmpresa" class="form-label fw-bold"></label>
+                            <input asp-for="NombreEmpresa" class="form-control" />
+                            <span asp-validation-for="NombreEmpresa" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="CedulaJuridica" class="form-label fw-bold"></label>
+                            <input asp-for="CedulaJuridica" class="form-control" />
+                            <span asp-validation-for="CedulaJuridica" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="Direccion" class="form-label fw-bold"></label>
+                            <textarea asp-for="Direccion" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Direccion" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Telefono" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <input asp-for="Telefono" class="form-control" />
+                            </div>
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CorreoElectronico" class="form-label fw-bold"></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                <input asp-for="CorreoElectronico" class="form-control" />
+                            </div>
+                            <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save me-2"></i> Guardar Cambios
+                        </button>
+                        <a asp-controller="Invoice" asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Volver a Facturación
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

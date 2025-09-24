@@ -1,0 +1,122 @@
+﻿@*
+    Este archivo representa la vista de "Detalles" para una única factura.
+    - Muestra los datos de la empresa, del cliente, el número de factura y fechas.
+    - Presenta una tabla con todas las líneas de producto (cantidad, precio, subtotal).
+    - Muestra los totales finales (subtotal, impuesto, total).
+
+    Ahora, esta vista está fuertemente tipada a nuestro nuevo ViewModel,
+    lo que nos da acceso tanto a los datos de la factura como a los de la empresa.
+*@
+@model SistemaFacturacion.Models.InvoiceDetailsViewModel
+
+@{
+    ViewData["Title"] = $"Detalle de Invoice - {Model.Invoice.NumeroFactura}";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0">Detalle de Factura</h3>
+        </div>
+        <div class="card-body">
+
+            @* --- INICIO: SECCIÓN DE DATOS DE LA EMPRESA EMISORA --- *@
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h4>Emitido por:</h4>
+                    <ul class="list-unstyled">
+                        <li><strong>@Model.CompanyData.NombreEmpresa</strong></li>
+                        <li>Cédula Jurídica: @Model.CompanyData.CedulaJuridica</li>
+                        <li>@Model.CompanyData.Direccion</li>
+                        <li>Tel: @Model.CompanyData.Telefono | Email: @Model.CompanyData.CorreoElectronico</li>
+                    </ul>
+                </div>
+            </div>
+            <hr style="border-style: dashed;" />
+            @* --- FIN: SECCIÓN DE DATOS DE LA EMPRESA EMISORA --- *@
+
+
+            @* SECCIÓN DE INFORMACIÓN DE LA FACTURA *@
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h4>Factura a:</h4>
+                    <ul class="list-unstyled">
+                        <li><strong>Cliente:</strong> @Model.Invoice.Cliente.NombreCompleto</li>
+                        <li><strong>Identificación:</strong> @Model.Invoice.Cliente.NumeroIdentificacion</li>
+                        <li><strong>Dirección:</strong> @Model.Invoice.Cliente.Direccion</li>
+                        <li><strong>Email:</strong> @Model.Invoice.Cliente.CorreoElectronico</li>
+                    </ul>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h4>Nº Factura: @Model.Invoice.NumeroFactura</h4>
+                    <ul class="list-unstyled">
+                        <li><strong>Fecha de Emisión:</strong> @Model.Invoice.FechaEmision.ToString("dd/MM/yyyy")</li>
+                        <li><strong>Condición de Pago:</strong> @Model.Invoice.CondicionPago</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr />
+
+            @* SECCIÓN DE LÍNEAS DE DETALLE (sin cambios) *@
+            <h4 class="mb-3">Productos y Servicios</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Descripción del Producto</th>
+                            <th scope="col" class="text-end">Cantidad</th>
+                            <th scope="col" class="text-end">Precio Unit.</th>
+                            <th scope="col" class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Invoice.InvoiceDetails)
+                        {
+                            <tr>
+                                <td>@item.Product.Code</td>
+                                <td>@item.Product.Name</td>
+                                <td class="text-end">@item.Quantity</td>
+                                <td class="text-end">@item.UnitPrice.ToString("C")</td>
+                                <td class="text-end">@item.Subtotal.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @* SECCIÓN DE TOTALES (sin cambios) *@
+            <div class="row justify-content-end mt-4">
+                <div class="col-md-5">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <strong>Subtotal:</strong>
+                            <span>@Model.Invoice.Subtotal.ToString("C")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <strong>Impuesto (13%):</strong>
+                            <span>@Model.Invoice.Impuesto.ToString("C")</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <strong class="h5">TOTAL:</strong>
+                            <strong class="h5">@Model.Invoice.Total.ToString("C")</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @* BOTONES DE ACCIÓN *@
+    <div class="form-group mt-4">
+        <a asp-action="Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i>Volver al Historial</a>
+         @* --- INICIO: NUEVO BOTÓN DE DESCARGA --- *@
+        <a asp-action="DescargarPdf" asp-route-id="@Model.Invoice.Id" class="btn btn-success">
+            <i class="fas fa-file-pdf me-2"></i>Descargar PDF
+        </a>
+        @* --- FIN: NUEVO BOTÓN DE DESCARGA --- *@
+
+    </div>
+</div>

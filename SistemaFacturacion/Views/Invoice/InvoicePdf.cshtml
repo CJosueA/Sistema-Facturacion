@@ -1,0 +1,258 @@
+﻿@*
+    Esta vista está diseñada para la conversión a PDF, imitando el estilo de la vista web 'Details.cshtml'.
+    - 'Layout = null' es crucial para evitar el layout principal de la aplicación.
+    - Se enlaza a Bootstrap 5 para asegurar que los estilos de diseño se apliquen en el PDF.
+    - Se incluyen estilos CSS específicos para optimizar la visualización en PDF (tamaño de fuente, márgenes, etc.).
+*@
+@model SistemaFacturacion.Models.InvoiceDetailsViewModel
+
+@{
+    Layout = null; // No queremos el _Layout.cshtml estándar.
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Factura - @Model.Invoice.NumeroFactura</title>
+    @* Enlazamos a Bootstrap 5 desde un CDN para que los estilos se carguen correctamente en el PDF. *@
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos específicos para la generación de PDF para ajustar la tipografía y márgenes */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 12px; /* Un poco más pequeño para PDF */
+            line-height: 1.6;
+            color: #333;
+            margin: 0; /* Asegura que no haya márgenes no deseados en el cuerpo */
+            padding: 20px; /* Un padding general para el contenido del PDF */
+        }
+
+        .container {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .card {
+            border: 1px solid #dee2e6;
+            border-radius: .25rem; /* Bordes ligeramente redondeados */
+        }
+
+        .card-header {
+            background-color: #343a40 !important; /* Fondo oscuro */
+            color: white !important;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0;
+            border-bottom: 1px solid rgba(0,0,0,.125);
+            border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #343a40;
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+
+        .list-unstyled {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .text-end {
+            text-align: right !important;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-collapse: collapse; /* Elimina espacios entre bordes de celda */
+        }
+
+            .table th, .table td {
+                padding: 0.75rem;
+                vertical-align: top;
+                border-top: 1px solid #dee2e6;
+            }
+
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05); /* Efecto de rayas en la tabla */
+        }
+
+        .table-light {
+            background-color: #f8f9fa !important;
+        }
+
+        .list-group-item {
+            position: relative;
+            display: block;
+            padding: 0.75rem 1.25rem;
+            background-color: #fff;
+            border: 1px solid rgba(0,0,0,.125);
+        }
+
+            .list-group-item:first-child {
+                border-top-left-radius: .25rem;
+                border-top-right-radius: .25rem;
+            }
+
+            .list-group-item:last-child {
+                border-bottom-left-radius: .25rem;
+                border-bottom-right-radius: .25rem;
+            }
+
+        .bg-light {
+            background-color: #f8f9fa !important;
+        }
+
+        .h5 {
+            font-size: 1.25rem;
+        }
+
+        hr {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border: 0;
+            border-top: 1px solid rgba(0,0,0,.1);
+        }
+
+            hr.dashed {
+                border-top: 1px dashed #dee2e6;
+            }
+
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem !important;
+        }
+
+        .justify-content-between {
+            justify-content: space-between !important;
+        }
+
+        .d-flex {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        @* Eliminar mt-4 para controlarlo con el padding del body *@
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h3 class="mb-0">Detalle de Factura</h3>
+            </div>
+            <div class="card-body">
+                @* SECCIÓN: Datos de la Empresa Emisora *@
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <h4>Emitido por:</h4>
+                        <ul class="list-unstyled">
+                            <li><strong>@Model.CompanyData.NombreEmpresa</strong></li>
+                            <li>Cédula Jurídica: @Model.CompanyData.CedulaJuridica</li>
+                            <li>@Model.CompanyData.Direccion</li>
+                            <li>Tel: @Model.CompanyData.Telefono | Email: @Model.CompanyData.CorreoElectronico</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr class="dashed" /> @* Usamos la clase "dashed" para una línea diferente *@
+
+                @* SECCIÓN: Información de la Factura y Cliente *@
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <h4>Factura a:</h4>
+                        <ul class="list-unstyled">
+                            <li><strong>Cliente:</strong> @Model.Invoice.Cliente.NombreCompleto</li>
+                            <li><strong>Identificación:</strong> @Model.Invoice.Cliente.NumeroIdentificacion</li>
+                            <li><strong>Dirección:</strong> @Model.Invoice.Cliente.Direccion</li>
+                            <li><strong>Email:</strong> @Model.Invoice.Cliente.CorreoElectronico</li>
+                        </ul>
+                    </div>
+                    <div class="col-6 text-end">
+                        <h4>Nº Factura: @Model.Invoice.NumeroFactura</h4>
+                        <ul class="list-unstyled">
+                            <li><strong>Fecha de Emisión:</strong> @Model.Invoice.FechaEmision.ToString("dd/MM/yyyy")</li>
+                            <li><strong>Condición de Pago:</strong> @Model.Invoice.CondicionPago</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr />
+
+                @* SECCIÓN: Tabla de Productos y Servicios *@
+                <h4 class="mb-3">Productos y Servicios</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Código</th>
+                                <th scope="col">Descripción del Producto</th>
+                                <th scope="col" class="text-end">Cantidad</th>
+                                <th scope="col" class="text-end">Precio Unit.</th>
+                                <th scope="col" class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Invoice.InvoiceDetails)
+                            {
+                                <tr>
+                                    <td>@item.Product.Code</td>
+                                    <td>@item.Product.Name</td>
+                                    <td class="text-end">@item.Product.Name</td>
+                                    <td class="text-end">@item.Product.Name</td> @* Formato de moneda CR *@
+                                    <td class="text-end">@item.Subtotal.ToString("C", new System.Globalization.CultureInfo("es-CR"))</td> @* Formato de moneda CR *@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @* SECCIÓN: Totales de la Factura *@
+                <div class="row justify-content-end mt-4">
+                    <div class="col-md-5">
+                        @* Ajustamos a col-5 para que la caja de totales sea un poco más ancha *@
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <strong>Subtotal:</strong>
+                                <span>@Model.Invoice.Subtotal.ToString("C", new System.Globalization.CultureInfo("es-CR"))</span> @* Formato de moneda CR *@
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <strong>Impuesto (13%):</strong>
+                                <span>@Model.Invoice.Impuesto.ToString("C", new System.Globalization.CultureInfo("es-CR"))</span> @* Formato de moneda CR *@
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                <strong class="h5">TOTAL:</strong>
+                                <strong class="h5">@Model.Invoice.Total.ToString("C", new System.Globalization.CultureInfo("es-CR"))</strong> @* Formato de moneda CR *@
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

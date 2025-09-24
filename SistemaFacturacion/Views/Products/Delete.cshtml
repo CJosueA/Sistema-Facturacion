@@ -1,0 +1,59 @@
+﻿@*
+    VIEW TO CONFIRM PRODUCT DELETION (DEACTIVATION)
+    Design: Centered warning card using danger colors.
+    UX: Clearly communicates the consequence of the action. Displays data of the
+        product that will be affected to prevent errors.
+*@
+
+@model SistemaFacturacion.Models.Product
+
+@{
+    ViewData["Title"] = "Confirmar Desactivación";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+        <div class="card shadow-lg mt-4 border-danger">
+
+            @* SECTION 1: View Header *@
+            <div class="card-header text-center bg-danger text-white">
+                <h3 class="my-2"><i class="fas fa-exclamation-triangle me-2"></i> @ViewData["Title"]</h3>
+            </div>
+
+            @* SECTION 2: Confirmation Details *@
+            <div class="card-body p-4">
+                <p class="text-center h5">¿Está seguro de que desea desactivar este producto?</p>
+                <p class="text-center text-muted">Esta acción marcará el producto como 'Inactivo' y no estará disponible para nuevas facturas.</p>
+
+                <hr />
+
+                <div class="alert alert-light">
+                    <h5 class="text-center mb-3">Producto a Desactivar</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <strong>Código:</strong>
+                            <span>@Html.DisplayFor(model => model.Code)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <strong>Nombre:</strong>
+                            <span>@Html.DisplayFor(model => model.Name)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            @* SECTION 3: Action Footer with Confirmation Form *@
+            <div class="card-footer bg-light">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="d-grid gap-2">
+                        <input type="submit" value="Sí, Desactivar Producto" class="btn btn-danger btn-lg" />
+                        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+﻿@model SistemaFacturacion.Models.User
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="card shadow-lg mt-4">
+
+            <div class="card-header text-center bg-dark text-white">
+                <h3 class="my-2">@ViewData["Title"]</h3>
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="alert alert-light border text-center">
+                    <h5 class="alert-heading">Usuario</h5>
+                    <p class="mb-0 fs-5"><strong>@Model.NombreUsuario</strong></p>
+                </div>
+
+                <dl class="row mt-4">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NombreUsuario)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreUsuario)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Rol)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Rol)</dd>
+                </dl>
+            </div>
+
+            <div class="card-footer bg-light text-center">
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">
+                    <i class="fas fa-pencil-alt me-2"></i> Editar
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Volver a la Lista
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

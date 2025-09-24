@@ -1,0 +1,51 @@
+﻿@model SistemaFacturacion.Models.Customer
+
+@{
+    ViewData["Title"] = "Detalles del Cliente";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+
+        <div class="card shadow-lg mt-4">
+
+            <div class="card-header text-center bg-dark text-white">
+                <h3 class="my-2">@ViewData["Title"]</h3>
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="alert alert-light border text-center">
+                    <h5 class="alert-heading">Cliente</h5>
+                    <p class="mb-0 fs-5"><strong>@Model.NombreCompleto</strong></p>
+                </div>
+
+                <dl class="row mt-4">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NumeroIdentificacion)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.NumeroIdentificacion)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NombreCompleto)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreCompleto)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CorreoElectronico)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.CorreoElectronico)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Telefono)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Telefono)</dd>
+
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Direccion)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Direccion)</dd>
+                </dl>
+            </div>
+
+            <div class="card-footer bg-light text-center">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                    <i class="fas fa-pencil-alt me-2"></i> Editar
+                </a>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Volver a la Lista
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
