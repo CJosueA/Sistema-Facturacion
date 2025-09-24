@@ -2,12 +2,16 @@
 
 Este proyecto es un **MVP (Producto Mínimo Viable)** de un sistema web para la facturación y gestión de inventario, desarrollado como parte de mi formación y portafolio profesional.
 
-<img width="1898" height="929" alt="Home" src="https://github.com/user-attachments/assets/9c5d6ccd-8390-448a-bc85-fbd3696f449c" />
-<img width="1896" height="928" alt="image" src="https://github.com/user-attachments/assets/7003ae89-7efe-4a06-9d87-2e4780c843d0" />
-<img width="1911" height="923" alt="image" src="https://github.com/user-attachments/assets/2452a557-b916-47fc-a888-7ad368c47002" />
-<img width="1912" height="923" alt="image" src="https://github.com/user-attachments/assets/b76a60c2-d161-4267-b64b-224d43908553" />
-<img width="1915" height="925" alt="image" src="https://github.com/user-attachments/assets/fb40a2ce-f66e-42ec-9604-4e3ee3e32221" />
-<img width="1891" height="924" alt="image" src="https://github.com/user-attachments/assets/43f540e6-040b-4e83-9ce5-7a3967b80a7f" />
+<img width="1893" height="928" alt="image" src="https://github.com/user-attachments/assets/8b0844a5-a3fa-4398-8cb6-51ac3881c8fd" />
+<img width="1893" height="922" alt="image" src="https://github.com/user-attachments/assets/59d47c9f-54b6-48af-b3dc-0cd362a864ce" />
+<img width="1888" height="927" alt="image" src="https://github.com/user-attachments/assets/65f27f62-f4ba-4270-b033-34e5bf59b601" />
+<img width="1911" height="925" alt="image" src="https://github.com/user-attachments/assets/9cf8280e-851c-4ab7-b199-183b7168cace" />
+<img width="1910" height="925" alt="image" src="https://github.com/user-attachments/assets/7954e2ea-d95c-469f-8e6d-729af0ffdc96" />
+<img width="1909" height="924" alt="image" src="https://github.com/user-attachments/assets/b0dd3526-1d54-4230-a6d1-ab94a3b72c49" />
+<img width="1894" height="929" alt="image" src="https://github.com/user-attachments/assets/dd8a7327-b684-4afb-826e-4eefa68b90bb" />
+
+
+
 
 
 
