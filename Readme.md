@@ -1,5 +1,9 @@
 # **Sistema de Facturación y Gestión de Inventario (MVP)**
 
+![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=c-sharp&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
+![Visual Studio](https://img.shields.io/badge/Visual%20Studio-5C2D91.svg?style=for-the-badge&logo=visual-studio&logoColor=white)
+
 Este proyecto es un **MVP (Producto Mínimo Viable)** de un sistema web para la facturación y gestión de inventario, desarrollado como parte de mi formación y portafolio profesional.
 
 <img width="1893" height="928" alt="image" src="https://github.com/user-attachments/assets/8b0844a5-a3fa-4398-8cb6-51ac3881c8fd" />
